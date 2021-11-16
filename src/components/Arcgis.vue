@@ -30,6 +30,7 @@ export default {
 
       view.popup.autoOpenEnabled = false;
       view.on("click", (event) => {
+        console.log("event",event)
         // Get the coordinates of the click on the view
         // around the decimals to 3 decimals
         const lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
@@ -65,12 +66,43 @@ export default {
       })
       view.graphics.addMany([polygonGraphic]);
       // 销毁
-      setTimeout(function(){
-        view.graphics.removeMany([polygonGraphic])
-      },2000)
+      // setTimeout(function(){
+      //   view.graphics.removeMany([polygonGraphic])
+      // },2000)
 
 
 
+
+        const point1 = new Point({
+          longitude: 120.737681,
+          latitude: 30.765013
+        });
+        // Create a symbol for drawing the point
+        const textSymbol = {
+          type: "text", // autocasts as new TextSymbol()
+          color: "#7A003C",
+          text: "\ue61c", // esri-icon-map-pin 加个u!!!!
+          font: {
+            // autocasts as new Font()
+            size: 36,
+            family: "CalciteWebCoreIcons"
+          }
+        };
+
+        // Create a graphic and add the geometry and symbol to it
+        const pointGraphic1 = new Graphic({
+          geometry: point1,
+          symbol: textSymbol
+        });
+        // point1.on("click",function(){
+        //   console.log(222222222)
+        // })
+        view.graphics.addMany([pointGraphic1]);
+
+        view.graphics.on('click', function(e){
+          console.log(21)
+          console.log(e)
+        })
 
     },
   },
@@ -79,7 +111,7 @@ export default {
 
 <style>
 @import "@arcgis/core/assets/esri/themes/light/main.css";
-
+@import "../assets/iconfont/iconfont.css";
 .viewDiv {
   padding: 0;
   margin: 0;
