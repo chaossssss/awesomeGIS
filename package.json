@@ -1,0 +1,19 @@
+{
+  "name": "vite-mapbox",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@arcgis/core": "^4.21.2",
+    "mapbox-gl": "^2.6.0",
+    "vue": "^3.2.16",
+    "vue-router": "^3.5.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.9.3",
+    "vite": "^2.6.4"
+  }
+}
