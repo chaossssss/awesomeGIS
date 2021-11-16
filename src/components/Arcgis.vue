@@ -4,8 +4,11 @@
 
 <script>
 import Map from "@arcgis/core/Map";
-import MapView from "@arcgis/core/views/MapView.js"
+import MapView from "@arcgis/core/views/MapView.js";
 import esriConfig from "@arcgis/core/config.js";
+import Point from "@arcgis/core/geometry/Point"
+import Polygon from "@arcgis/core/geometry/Polygon";
+import Graphic from "@arcgis/core/Graphic"
 export default {
   name: "Arcgis",
   mounted() {
@@ -16,14 +19,59 @@ export default {
       esriConfig.apiKey =
         "AAPK8053643d98d74415a58117a1061b6dafibilKp3QCvHt-X1f0_rkQor1MEABBfqdJLXMsalfF_GeVVPRCk5OpVBt6TGfeUjF";
       const map = new Map({
-        basemap: "arcgis-topographic", // Basemap layer service
+        basemap: "topo-vector", // Basemap layer service
       });
       const view = new MapView({
         map: map,
-        center: [-118.805, 34.027], // Longitude, latitude
+        center: [120.755623, 30.746814], // Longitude, latitude
         zoom: 13, // Zoom level
         container: "viewDiv", // Div element
       });
+
+      view.popup.autoOpenEnabled = false;
+      view.on("click", (event) => {
+        // Get the coordinates of the click on the view
+        // around the decimals to 3 decimals
+        const lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
+        const lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
+
+        view.popup.open({
+          // Set the popup's title to the coordinates of the clicked location
+          title: "Reverse geocode: [" + lon + ", " + lat + "]",
+          location: event.mapPoint, // Set the location of the popup to the clicked location
+        });
+      });
+
+
+
+
+      // 创建多边形
+      const polygon = {
+        type: 'polygon',
+        rings: [[120.737681, 30.765013], [120.689616, 30.711897], [120.837932, 30.711897]]
+      }
+      const fillSymbol = {
+        type: 'simple-fill',
+        color: [227, 139, 79, 0],
+        outline: {
+          // autocasts as new SimpleLineSymbol()
+          color: [255, 0, 0],
+          width: 1
+        }
+      }
+      const polygonGraphic = new Graphic({
+        geometry: polygon,
+        symbol: fillSymbol
+      })
+      view.graphics.addMany([polygonGraphic]);
+      // 销毁
+      setTimeout(function(){
+        view.graphics.removeMany([polygonGraphic])
+      },2000)
+
+
+
+
     },
   },
 };
@@ -33,7 +81,9 @@ export default {
 @import "@arcgis/core/assets/esri/themes/light/main.css";
 
 .viewDiv {
-  width: 800px;
-  height: 600px;
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
 }
 </style>
